@@ -7,8 +7,10 @@ Web Site:    http://www.phpeasycode.com
 Contact:     webmaster@phpeasycode.com
 *************************************************************************/
 
-$domain = $_GET['domain'];
-
+$domain = "";
+if( isset( $_GET['domain'] ) ) {
+	$domain = $_GET['domain'];
+}
 // For the full list of TLDs/Whois servers see http://www.iana.org/domains/root/db/ and http://www.whois365.com/en/listtld/
 $whoisservers = array(
 	"ac" => "whois.nic.ac", // Ascension Island
@@ -367,7 +369,7 @@ function QueryWhoisServer($whoisserver, $domain) {
 		$rows = explode("\n", $out);
 		foreach($rows as $row) {
 			$row = trim($row);
-			if(($row != '') && ($row{0} != '#') && ($row{0} != '%')) {
+			if(($row != '') && ($row[0] != '#') && ($row[0] != '%')) {
 				$res .= $row."\n<br>";
 			}
 		}

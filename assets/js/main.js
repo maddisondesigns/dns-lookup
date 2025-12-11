@@ -3,137 +3,77 @@
 	html5up.net | @ajlkn
 	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 */
+jQuery( document ).ready( function( $ ) {
+	// skel.breakpoints({
+	// 	xlarge: '(max-width: 1680px)',
+	// 	large: '(max-width: 1280px)',
+	// 	medium: '(max-width: 980px)',
+	// 	small: '(max-width: 736px)',
+	// 	xsmall: '(max-width: 480px)',
+	// 	xxsmall: '(max-width: 360px)'
+	// });
+	$('body').removeClass('is-loading');
 
-(function($) {
+	var	$window = $(window),
+		$body = $('body'),
+		$main = $('#main'),
+		$distance,
+		didScroll = false;
+		altClass = true;
 
-	skel.breakpoints({
-		xlarge: '(max-width: 1680px)',
-		large: '(max-width: 1280px)',
-		medium: '(max-width: 980px)',
-		small: '(max-width: 736px)',
-		xsmall: '(max-width: 480px)',
-		xxsmall: '(max-width: 360px)'
+	if ($('nav').length) {
+		$distance = $('nav').offset().top;
+	}
+
+	$window.scroll(function() {
+		didScroll = true;
 	});
 
-	$(function() {
-
-		var	$window = $(window),
-			$body = $('body'),
-			$main = $('#main');
-
-		// Disable animations/transitions until the page has loaded.
-			$body.addClass('is-loading');
-
-			$window.on('load', function() {
-				window.setTimeout(function() {
-					$body.removeClass('is-loading');
-				}, 100);
-			});
-
-		// Fix: Placeholder polyfill.
-			$('form').placeholder();
-
-		// Prioritize "important" elements on medium.
-			skel.on('+medium -medium', function() {
-				$.prioritize(
-					'.important\\28 medium\\29',
-					skel.breakpoint('medium').active
-				);
-			});
-
-		// Nav.
-			var $nav = $('#nav');
-
-			if ($nav.length > 0) {
-
-				// Shrink effect.
-					$main
-						.scrollex({
-							mode: 'top',
-							enter: function() {
-								$nav.addClass('alt');
-							},
-							leave: function() {
-								$nav.removeClass('alt');
-							},
-						});
-
-				// Links.
-					var $nav_a = $nav.find('a');
-
-					$nav_a
-						.scrolly({
-							speed: 1000,
-							offset: function() { return $nav.height(); }
-						})
-						.on('click', function() {
-
-							var $this = $(this);
-
-							// External link? Bail.
-								if ($this.attr('href').charAt(0) != '#')
-									return;
-
-							// Deactivate all links.
-								$nav_a
-									.removeClass('active')
-									.removeClass('active-locked');
-
-							// Activate link *and* lock it (so Scrollex doesn't try to activate other links as we're scrolling to this one's section).
-								$this
-									.addClass('active')
-									.addClass('active-locked');
-
-						})
-						.each(function() {
-
-							var	$this = $(this),
-								id = $this.attr('href'),
-								$section = $(id);
-
-							// No section for this link? Bail.
-								if ($section.length < 1)
-									return;
-
-							// Scrollex.
-								$section.scrollex({
-									mode: 'middle',
-									initialize: function() {
-
-										// Deactivate section.
-											if (skel.canUse('transition'))
-												$section.addClass('inactive');
-
-									},
-									enter: function() {
-
-										// Activate section.
-											$section.removeClass('inactive');
-
-										// No locked links? Deactivate all links and activate this section's one.
-											if ($nav_a.filter('.active-locked').length == 0) {
-
-												$nav_a.removeClass('active');
-												$this.addClass('active');
-
-											}
-
-										// Otherwise, if this section's link is the one that's locked, unlock it.
-											else if ($this.hasClass('active-locked'))
-												$this.removeClass('active-locked');
-
-									}
-								});
-
-						});
-
+	// Add class to nav when it hits top of window
+	setInterval(function() {
+		if ( didScroll ) {
+			didScroll = false;
+			if ( $window.scrollTop() >= $distance ) {
+				$('nav').addClass('alt');
+				altClass = true;
 			}
+			else if( altClass == true ) {
+				$('nav').removeClass('alt');
+				altClass = false;
+			}
+		}
+	}, 250);
 
-		// Scrolly.
-			$('.scrolly').scrolly({
-				speed: 1000
-			});
-
-	});
-
-})(jQuery);
+	// Smooth scrolling
+	$('a[href*="#"]')
+		// Remove links that don't actually link to anything
+		.not('[href="#"]')
+		.not('[href="#0"]')
+		.click(function(event) {
+			// On-page links
+			if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname ) {
+				// Figure out element to scroll to
+				var target = $(this.hash);
+				target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+				// Does a scroll target exist?
+				if (target.length) {
+					// Only prevent default if animation is actually gonna happen
+					event.preventDefault();
+					$('html, body').animate({
+						scrollTop: target.offset().top
+					}, 1000, function() {
+						// Callback after animation
+						// Must change focus!
+						var $target = $(target);
+						$target.focus();
+						if ($target.is(":focus")) { // Checking if the target was focused
+							return false;
+						} else {
+							$target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
+							$target.focus(); // Set focus again
+						};
+					});
+				}
+			}
+		});
+} );

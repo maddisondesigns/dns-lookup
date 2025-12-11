@@ -3,16 +3,16 @@
 	require "functions/domain.php";
 	require "functions/whois.php";
 
-	$displayCAPTCHA = true;
+	$displayCAPTCHA = false;
 	$secret = 'your-google-recapthca-secret-key';
 	$sitekey = 'your-google-recapthca-site-key';
 
-	if(isset($_POST['domain'])) {
+	if( isset( $_REQUEST['domain'] ) ) {
 
 		$displayCAPTCHA = false;
 
-		$domainName = $_POST['domain'];
-		
+		$domainName = $_REQUEST['domain'];
+
 		$a = ARecord($domainName);
 		$aaaa = AAAARecord($domainName);
 		$mx = MXRecord($domainName);
@@ -37,13 +37,13 @@
 
 	if(isset($_POST['submit']))  {
 		if(isset($_POST['g-recaptcha-response'])) {
-	        
-	        $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
-	        $responseData = json_decode($verifyResponse,true);
-	        if($responseData['success'] == 1) {
-	        	if(isset($_POST['domain'])) {
+			
+			$verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
+			$responseData = json_decode($verifyResponse,true);
+			if($responseData['success'] == 1) {
+				if(isset($_POST['domain'])) {
 
-	        		$displayCAPTCHA = false;
+					$displayCAPTCHA = false;
 
 					$domainName = $_POST['domain'];
 					
@@ -67,7 +67,7 @@
 					}
 					else die("Invalid Input!");
 				}
-	        }
+			}
 		}
 	}
 	
@@ -76,36 +76,32 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
 		<link rel="stylesheet" href="assets/css/main.css" />
-		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width">		
-		<meta name="description" content="norak.us free DNS Lookup tool">
+		<meta name="description" content="A free DNS Lookup tool">
 		<meta name="keywords" content="DNS, Lookup, A, AAAA, ipv4, ipv6, mx, txt, srv, cname, ptr, whois, record, records">
-		<meta name="author" content="erick">
-		<title>DNS Lookup Tool :: norak.us</title>
-		<link rel="icon" href="favicon.ico" type="image/x-icon" />
+		<meta name="author" content="Anthony Hortin">
+		<title>DNS Lookup Tool</title>
+		<link rel="icon" type="image/png" href="favicon.png"/>
+		<link rel="preconnect" href="https://fonts.bunny.net">
+		<link href="https://fonts.bunny.net/css?family=source-sans-pro:300,400" rel="stylesheet" />
 		<style type="text/css">
-            @media screen {
-            @font-face {
-            font-family: 'CC-ICONS';
-            font-style: normal;
-            font-weight: normal;
-            src: url('http://mirrors.creativecommons.org/presskit/cc-icons.ttf') format('truetype');
-            }
-
-            span.cc {
-            font-family: 'CC-ICONS';
-            color: #FFF;
-            }
-            }
-        </style>
-
-        
+			@media screen {
+				@font-face {
+					font-family: 'CC-ICONS';
+					font-style: normal;
+					font-weight: normal;
+					src: url('http://mirrors.creativecommons.org/presskit/cc-icons.ttf') format('truetype');
+				}
+				span.cc {
+					font-family: 'CC-ICONS';
+					color: #FFF;
+				}
+			}
+		</style>
 	</head>
-	<body>
+	<body class="is-loading">
 
 		<!-- Wrapper -->
 			<div id="wrapper">
@@ -119,7 +115,7 @@
 							?>
 							<form method="POST"  />
 								<div class="12u 12u$(xsmall)">
-									<input type="text" name="domain" placeholder="<?php if(isset($domainName)) { echo $domainName;} else { echo 'example.com';} ?>" value="" required/>
+									<input type="text" name="domain" placeholder="<?php if(isset($domainName)) { echo $domainName;} else { echo 'example.com';} ?>" value="<?php if(isset($domainName)) { echo $domainName;} ?>" required/>
 								</div>
 								&nbsp;
 								<div class="12u 12u$(xsmall)">
@@ -287,29 +283,27 @@
 				</div>
 				<!-- Footer -->
 					<footer id="footer">
-					<p><font face="Verdana" size="1">[c]2016, LucuBRB &amp; Erick Setiawan.<br>
-					Partner : <a target="_blank" href="http://www.igodns.com/">igodns.com</a>. 
-					Thanks to :
-					<a target="_blank" href="http://www.jonathandavis.me.uk/2014/09/writing-a-dns-look-up-tool/">
-					Jonathan Davis</a></font></p>
+					<!-- May add some conent in here but for the time being, let's leave it blank -->
 					</footer>
 			</div>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
+			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 			<script src="assets/js/util.js"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
 			<script src="assets/js/main.js"></script>
-			<script>
-				$(document).ready(function() {
-					$('#submit').prop('disabled', true);
-				});
+			<?php 
+			// Don't disable the Submit button if we're not using RECAPTCHA
+			if( $displayCAPTCHA == true ) {
+			?>
+				<script>
+					$(document).ready(function() {
+						$('#submit').prop('disabled', true);
+					});
 
-				function doSomething() { $('#submit').prop('disabled', false); }
-			</script>
-
+					function doSomething() { $('#submit').prop('disabled', false); }
+				</script>
+			<?php
+			} 
+			?>
 	</body>
 </html>
