@@ -12,6 +12,10 @@ Which was based on Jonathan Davis' [DNS Lookup](http://www.jonathandavis.me.uk/2
 
 ### Changelog
 
+= 1.2 - 11 December 2025=
+Removed Skel JavaScript from main js file
+Added DNS icon courtesy of [Icons8](https://icons8.com)
+
 = 1.1 - 11 December 2025 =
 Updated jQuery script call to get latest version from CDN
 Removed reliance on scrollex, scrolly & Skel Scripts
