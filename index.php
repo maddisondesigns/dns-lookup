@@ -76,7 +76,6 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<link rel="stylesheet" href="assets/css/main.css" />
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<meta name="viewport" content="width=device-width">		
 		<meta name="description" content="A free DNS Lookup tool">
@@ -86,6 +85,8 @@
 		<link rel="icon" type="image/png" href="favicon.png"/>
 		<link rel="preconnect" href="https://fonts.bunny.net">
 		<link href="https://fonts.bunny.net/css?family=source-sans-pro:300,400" rel="stylesheet" />
+		<link rel="stylesheet" href="assets/css/grid.css" />
+		<link rel="stylesheet" href="assets/css/main.css" />
 		<style type="text/css">
 			@media screen {
 				@font-face {
