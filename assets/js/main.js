@@ -1,15 +1,11 @@
-/*
-	Stellar by HTML5 UP
-	html5up.net | @ajlkn
-	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
-*/
 jQuery( document ).ready( function( $ ) {
 	$('body').removeClass('is-loading');
 
 	var	$window = $(window),
-		$body = $('body'),
-		$main = $('#main'),
+		$domain = $('#domain-name'),
+		$submitbutton = $('#submit'),
 		$distance,
+		turnstileValidated = false,
 		didScroll = false;
 		altClass = true;
 
@@ -20,6 +16,34 @@ jQuery( document ).ready( function( $ ) {
 	$window.scroll(function() {
 		didScroll = true;
 	});
+
+	if (displayTurnstile) {
+		const widgetId = turnstile.render("#turnstile-container", {
+			sitekey: turnstileSitekey,
+			callback: function (token) {
+				console.log("Success:", token);
+				turnstileValidated = true;
+			},
+		});
+	}
+
+	$domain.bind("change blur keyup mouseup", function() {
+		if ($domain.val() === '') {
+			$submitbutton.prop('disabled', true);
+		} else if(turnstileValidated) {
+			$submitbutton.prop('disabled', false);
+		}
+	});
+
+	// $domain.addEventListener('change', submitStateHandle);
+
+	// function submitStateHandle() {
+	// 	if ($domain.value === '') {
+	// 		$submitbutton.disabled = true;
+	// 	} else {
+	// 		$submitbutton.disabled = false;
+	// 	}
+	// }
 
 	// Add class to nav when it hits top of window
 	setInterval(function() {

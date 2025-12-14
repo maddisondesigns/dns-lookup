@@ -3,13 +3,18 @@
 	require "functions/domain.php";
 	require "functions/whois.php";
 
-	$displayCAPTCHA = false;
-	$secret = 'your-google-recapthca-secret-key';
-	$sitekey = 'your-google-recapthca-site-key';
+	$displayRECAPTCHA = false;
+	$recaptchaSecret = 'your-google-recaptcha-secret-key';
+	$recaptchaSitekey = 'your-google-recaptcha-site-key';
+
+	$displayTurnstile = false;
+	$turnstileSitekey = 'your-cloudflare-turnstile-site-key';
+
+	$submitStatus = "";
 
 	if( isset( $_REQUEST['domain'] ) ) {
 
-		$displayCAPTCHA = false;
+		$displayRECAPTCHA = false;
 
 		$domainName = $_REQUEST['domain'];
 
@@ -38,12 +43,12 @@
 	if(isset($_POST['submit']))  {
 		if(isset($_POST['g-recaptcha-response'])) {
 			
-			$verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
+			$verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$recaptchaSecret.'&response='.$_POST['g-recaptcha-response']);
 			$responseData = json_decode($verifyResponse,true);
 			if($responseData['success'] == 1) {
 				if(isset($_POST['domain'])) {
 
-					$displayCAPTCHA = false;
+					$displayRECAPTCHA = false;
 
 					$domainName = $_POST['domain'];
 					
@@ -83,6 +88,11 @@
 		<meta name="author" content="Anthony Hortin">
 		<title>DNS Lookup Tool</title>
 		<link rel="icon" type="image/png" href="favicon.png"/>
+		<?php 
+			if($displayTurnstile === true) {
+				echo '<link rel="preconnect" href="https://challenges.cloudflare.com">' . "\n";
+			}
+		?>
 		<link rel="preconnect" href="https://fonts.bunny.net">
 		<link href="https://fonts.bunny.net/css?family=source-sans-pro:300,400" rel="stylesheet" />
 		<link rel="stylesheet" href="assets/css/grid.css" />
@@ -114,22 +124,27 @@
 							<?php 
 								echo " Your IP is : $_SERVER[REMOTE_ADDR]";
 							?>
-							<form method="POST"  />
+							<form method="POST">
 								<div class="12u 12u$(xsmall)">
-									<input type="text" name="domain" placeholder="<?php if(isset($domainName)) { echo $domainName;} else { echo 'example.com';} ?>" value="<?php if(isset($domainName)) { echo $domainName;} ?>" required/>
+									<input id="domain-name" type="text" name="domain" placeholder="<?php if(isset($domainName)) { echo $domainName;} else { echo 'example.com';} ?>" value="<?php if(isset($domainName)) { echo $domainName;} ?>" required/>
 								</div>
 								&nbsp;
 								<div class="12u 12u$(xsmall)">
 									<?php 
-										if($displayCAPTCHA == true){
-											echo "<script src='https://www.google.com/recaptcha/api.js'></script>";
-											echo "<div align=center class=g-recaptcha data-sitekey=".$sitekey." data-callback=doSomething></div>";
+										if($displayTurnstile == true) {
+											echo '<div id="turnstile-container"></div>';
+											$submitStatus = "disabled";
 										}
-									?>								
+									?>
+									<?php
+										if($displayRECAPTCHA == true) {
+											echo "<div align=center class=g-recaptcha data-sitekey=" . $recaptchaSitekey . " data-callback=doSomething></div>";
+										}
+									?>
 								</div>
 								&nbsp;
 								<div class="12u 12u$(xsmall)">
-									<input id="submit" type="submit" name="submit" value="Submit" class="button special small" />
+									<input id="submit" type="submit" name="submit" value="Submit" class="button special small" <?php echo $submitStatus; ?> />
 								</div>
 
 							</form>
@@ -289,12 +304,26 @@
 			</div>
 
 		<!-- Scripts -->
+			<?php
+				if($displayTurnstile === true) {
+					echo '<script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" defer></script>';
+					echo '<script>';
+					echo 'var displayTurnstile = ' . $displayTurnstile . ';';
+					echo 'var turnstileSitekey = "' . $turnstileSitekey . '";';
+					echo '</script>';
+				}
+			?>
+			<?php
+				if($displayRECAPTCHA === true) {
+					echo '<script src="https://www.google.com/recaptcha/api.js"></script>';
+				}
+			?>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
 			<?php 
 			// Don't disable the Submit button if we're not using RECAPTCHA
-			if( $displayCAPTCHA == true ) {
+			if( $displayRECAPTCHA == true ) {
 			?>
 				<script>
 					$(document).ready(function() {
