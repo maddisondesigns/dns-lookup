@@ -9,6 +9,9 @@ jQuery( document ).ready( function( $ ) {
 		didScroll = false;
 		altClass = true;
 
+	// Disable Submit button on page load
+	$submitbutton.prop('disabled', true);
+
 	if ($('nav').length) {
 		$distance = $('nav').offset().top;
 	}
@@ -21,29 +24,27 @@ jQuery( document ).ready( function( $ ) {
 		const widgetId = turnstile.render("#turnstile-container", {
 			sitekey: turnstileSitekey,
 			callback: function (token) {
-				console.log("Success:", token);
 				turnstileValidated = true;
 			},
 		});
 	}
 
+	if(displayRECAPTCHA) {
+		$submitbutton.prop('disabled', true);
+	}
+
 	$domain.bind("change blur keyup mouseup", function() {
 		if ($domain.val() === '') {
 			$submitbutton.prop('disabled', true);
-		} else if(turnstileValidated) {
+		} else {
+			$submitbutton.prop('disabled', false);
+		}
+		if(displayTurnstile && turnstileValidated) {
+			$submitbutton.prop('disabled', false);
+		} else if(displayRECAPTCHA && recaptchaValidated) {
 			$submitbutton.prop('disabled', false);
 		}
 	});
-
-	// $domain.addEventListener('change', submitStateHandle);
-
-	// function submitStateHandle() {
-	// 	if ($domain.value === '') {
-	// 		$submitbutton.disabled = true;
-	// 	} else {
-	// 		$submitbutton.disabled = false;
-	// 	}
-	// }
 
 	// Add class to nav when it hits top of window
 	setInterval(function() {
@@ -93,3 +94,18 @@ jQuery( document ).ready( function( $ ) {
 			}
 		});
 } );
+
+var recaptchaValidated = false;
+
+function validateRecaptcha(checkValid) {
+	domainnameVal = document.getElementById('domain-name').value.trim().length
+	if(!checkValid) {
+		document.getElementById('submit').disabled = true;
+		recaptchaValidated = false;
+	} else {
+		if( domainnameVal ) {
+			document.getElementById('submit').disabled = false;
+		}
+		recaptchaValidated = true;
+	}
+}

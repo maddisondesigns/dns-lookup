@@ -4,8 +4,8 @@
 	require "functions/whois.php";
 
 	$displayRECAPTCHA = false;
-	$recaptchaSecret = 'your-google-recaptcha-secret-key';
 	$recaptchaSitekey = 'your-google-recaptcha-site-key';
+	$recaptchaSecret = 'your-google-recaptcha-secret-key';
 
 	$displayTurnstile = false;
 	$turnstileSitekey = 'your-cloudflare-turnstile-site-key';
@@ -13,9 +13,6 @@
 	$submitStatus = "";
 
 	if( isset( $_REQUEST['domain'] ) ) {
-
-		$displayRECAPTCHA = false;
-
 		$domainName = $_REQUEST['domain'];
 
 		$a = ARecord($domainName);
@@ -120,7 +117,6 @@
 				<!-- Header -->
 					<header id="header" class="alt">
 						<h1>DNS Lookup Tool</h1>
-						 <!-- <p><a href="http://norak.us/"><span class="cc">c b a</span>&nbsp;&nbsp;ER . 2016</a></p> -->
 							<?php 
 								echo " Your IP is : $_SERVER[REMOTE_ADDR]";
 							?>
@@ -138,7 +134,7 @@
 									?>
 									<?php
 										if($displayRECAPTCHA == true) {
-											echo "<div align=center class=g-recaptcha data-sitekey=" . $recaptchaSitekey . " data-callback=doSomething></div>";
+											echo '<div id="recaptcha-container" align=center class=g-recaptcha data-sitekey="' . $recaptchaSitekey . '" data-callback="validateRecaptcha" data-expired-callback="validateRecaptcha"></div>';
 										}
 									?>
 								</div>
@@ -160,39 +156,39 @@
 				<!-- Nav -->
 				<?php 
 					if(isset($domainName)) {
-						echo "
-							<nav id=\"nav\">
+						echo '
+							<nav id="nav">
 								<ul >
 									<li>
-										<a href=\"http://mxtoolbox.com/SuperTool.aspx?action=blacklist%3a".$domainName."\" target=\"_blank\">Blacklist Check</a>
+										<a href="http://mxtoolbox.com/SuperTool.aspx?action=blacklist%3a".$domainName."" target="_blank">Blacklist Check</a>
 									</li>
 									<li>
-										<a href=\"#a\" class=\"active\">A</a>
+										<a href="#a" class="active">A</a>
 									</li>
 									<li>
-										<a href=\"#mx\" >MX</a>
+										<a href="#mx" >MX</a>
 									</li>
 									<li>
-										<a href=\"#ns\" >NS</a>
+										<a href="#ns" >NS</a>
 									</li>
 									<li>
-										<a href=\"#soa\" >SOA</a>
+										<a href="#soa" >SOA</a>
 									</li>
 									<li>
-										<a href=\"#txt\" >TXT</a>
+										<a href="#txt" >TXT</a>
 									</li>
 									<li>
-										<a href=\"#srv\" >SRV</a>
+										<a href="#srv" >SRV</a>
 									</li>
 									<li>
-										<a href=\"#cname\" >CNAME</a>
+										<a href="#cname" >CNAME</a>
 									</li>
 									<li>
-										<a href=\"#whois\" >WHOIS</a>
+										<a href="#whois" >WHOIS</a>
 									</li>
 								</ul>
 							</nav>
-						";
+						';
 					}
 				?>	
 
@@ -200,99 +196,98 @@
 					<div id="main">
 					<?php 
 						if(isset($domainName)) {
-							echo "
-								
-								<section id=\"a\" class=\"main\">
-									<div class=\"spotlight\">
-										<div class=\"content\">
-											<header class=\"major\">
+							echo '								
+								<section id="a" class="main">
+									<div class="spotlight">
+										<div class="content">
+											<header class="major">
 												<h2>IPv4 and IPv6 Records</h2>
 											</header>
 											<h3><strong>A</strong></h3>
-											<p>".$a."</p>
+											<p>'.$a.'</p>
 											<h3><strong>AAAA</strong></h3>
-											<p>".$aaaa."</p>
+											<p>'.$aaaa.'</p>
 										</div>
 									</div>
 								</section>
 								
-								<section id=\"mx\" class=\"main\">
-									<div class=\"spotlight\">
-										<div class=\"content\">
-											<header class=\"major\">
+								<section id="mx" class="main">
+									<div class="spotlight">
+										<div class="content">
+											<header class="major">
 												<h2>MX Records</h2>
 											</header>
-											<p>".$mx."</p>
+											<p>'.$mx.'</p>
 										</div>
 									</div>
 								</section>
 								
-								<section id=\"ns\" class=\"main\">
-									<div class=\"spotlight\">
-										<div class=\"content\">
-											<header class=\"major\">
+								<section id="ns" class="main">
+									<div class="spotlight">
+										<div class="content">
+											<header class="major">
 												<h2>NS Records</h2>
 											</header>
-											<p>".$ns."</p>
+											<p>'.$ns.'</p>
 										</div>
 									</div>
 								</section>
 								
-								<section id=\"soa\" class=\"main\">
-									<div class=\"spotlight\">
-										<div class=\"content\">
-											<header class=\"major\">
+								<section id="soa" class="main">
+									<div class="spotlight">
+										<div class="content">
+											<header class="major">
 												<h2>SOA Records</h2>
 											</header>
-											<p>".$soa."</p>
+											<p>'.$soa.'</p>
 										</div>
 									</div>
 								</section>
 								
-								<section id=\"txt\" class=\"main\">
-									<div class=\"spotlight\">
-										<div class=\"content\">
-											<header class=\"major\">
+								<section id="txt" class="main">
+									<div class="spotlight">
+										<div class="content">
+											<header class="major">
 												<h2>TXT Records</h2>
 											</header>
-											<p>".$txt."</p>
+											<p>'.$txt.'</p>
 										</div>
 									</div>
 								</section>
 								
-								<section id=\"srv\" class=\"main\">
-									<div class=\"spotlight\">
-										<div class=\"content\">
-											<header class=\"major\">
+								<section id="srv" class="main">
+									<div class="spotlight">
+										<div class="content">
+											<header class="major">
 												<h2>SRV Records</h2>
 											</header>
-											<p>".$srv."</p>
+											<p>'.$srv.'</p>
 										</div>
 									</div>
 								</section>
 								
-								<section id=\"cname\" class=\"main\">
-									<div class=\"spotlight\">
-										<div class=\"content\">
-											<header class=\"major\">
+								<section id="cname" class="main">
+									<div class="spotlight">
+										<div class="content">
+											<header class="major">
 												<h2>CNAME Records</h2>
 											</header>
-											<p>".$cname."</p>
+											<p>'.$cname.'</p>
 										</div>
 									</div>
 								</section>
 								
-								<section id=\"whois\" class=\"main\">
-									<div class=\"spotlight\">
-										<div class=\"content\">
-											<header class=\"major\">
+								<section id="whois" class="main">
+									<div class="spotlight">
+										<div class="content">
+											<header class="major">
 												<h2>WHOIS</h2>
 											</header>
-											<p>".$whoisResult."</p>
+											<p>'.$whoisResult.'</p>
 										</div>
 									</div>
 								</section>
-							";
+							';
 						}
 					?>
 
@@ -311,29 +306,27 @@
 					echo 'var displayTurnstile = ' . $displayTurnstile . ';';
 					echo 'var turnstileSitekey = "' . $turnstileSitekey . '";';
 					echo '</script>';
+				} else {
+					echo '<script>';
+					echo 'var displayTurnstile = 0;';
+					echo '</script>';
 				}
 			?>
 			<?php
 				if($displayRECAPTCHA === true) {
 					echo '<script src="https://www.google.com/recaptcha/api.js"></script>';
+					echo '<script>';
+					echo 'var displayRECAPTCHA = ' . $displayRECAPTCHA . ';';
+					echo 'var recaptchaSitekey = "' . $recaptchaSitekey . '";';
+					echo '</script>';
+				} else {
+					echo '<script>';
+					echo 'var displayRECAPTCHA = 0;';
+					echo '</script>';
 				}
 			?>
 			<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 			<script src="assets/js/util.js"></script>
 			<script src="assets/js/main.js"></script>
-			<?php 
-			// Don't disable the Submit button if we're not using RECAPTCHA
-			if( $displayRECAPTCHA == true ) {
-			?>
-				<script>
-					$(document).ready(function() {
-						$('#submit').prop('disabled', true);
-					});
-
-					function doSomething() { $('#submit').prop('disabled', false); }
-				</script>
-			<?php
-			} 
-			?>
 	</body>
 </html>

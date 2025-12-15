@@ -1,21 +1,26 @@
-# DNS Lookup Tool
+# DNS Lookup Tool  
 Anthony Hortin - [@maddisondesigns](https://github.com/maddisondesigns)  
 
 
-## Description
-A PHP DNS Lookup Tool
+## Description  
+A PHP DNS Lookup Tool  
 
 Original code from [@ericksetiawan](https://github.com/ericksetiawan)  
-Which was based on Jonathan Davis' [DNS Lookup](http://www.jonathandavis.me.uk/2014/09/writing-a-dns-look-up-tool/)
+Which was based on Jonathan Davis' [DNS Lookup](http://www.jonathandavis.me.uk/2014/09/writing-a-dns-look-up-tool/)  
 
-HTML Template Stellar by HTML5 UP [html5up.net | @ajlkn](https://html5up.net)
-Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+HTML Template Stellar by HTML5 UP [html5up.net | @ajlkn](https://html5up.net)  
+Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)  
 
 ### Changelog
 
+= 1.2.3 - 15 December 2025 =  
+Updated Google reCAPTCHA functionality  
+Removed FontAwesome as it wasn't being utilised  
+Tidied code  
+
 = 1.2.2 - 14 December 2025 =  
-Move grid specific styles into a separate stylesheet
-Added support for Cloudflare Turnstile
+Move grid specific styles into a separate stylesheet  
+Added support for Cloudflare Turnstile  
 
 = 1.2.1 - 11 December 2025 =  
 Tweaked readme file so Github doesn't mess up formatting  
