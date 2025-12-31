@@ -163,28 +163,28 @@
 										<a href="http://mxtoolbox.com/SuperTool.aspx?action=blacklist%3a".$domainName."" target="_blank">Blacklist Check</a>
 									</li>
 									<li>
-										<a href="#a" class="active">A</a>
+										<a href="#a">A</a>
 									</li>
 									<li>
-										<a href="#mx" >MX</a>
+										<a href="#mx">MX</a>
 									</li>
 									<li>
-										<a href="#ns" >NS</a>
+										<a href="#ns">NS</a>
 									</li>
 									<li>
-										<a href="#soa" >SOA</a>
+										<a href="#soa">SOA</a>
 									</li>
 									<li>
-										<a href="#txt" >TXT</a>
+										<a href="#txt">TXT</a>
 									</li>
 									<li>
-										<a href="#srv" >SRV</a>
+										<a href="#srv">SRV</a>
 									</li>
 									<li>
-										<a href="#cname" >CNAME</a>
+										<a href="#cname">CNAME</a>
 									</li>
 									<li>
-										<a href="#whois" >WHOIS</a>
+										<a href="#whois">WHOIS</a>
 									</li>
 								</ul>
 							</nav>
